@@ -44,10 +44,17 @@ def valid_request() -> dict:
 
 class FakeAIService:
     def generate(self, request):
+        categories = (
+            ["Conversational"] * 2
+            + ["Promotional"] * 2
+            + ["Witty / Meme-style"] * 2
+            + ["Informative"] * 2
+            + ["Engagement", "Community-focused"]
+        )
         tweets = [
             {
                 "id": index,
-                "category": "Conversational",
+                "category": categories[index - 1],
                 "text": f"Fresh coffee thought number {index}.",
                 "character_count": len(f"Fresh coffee thought number {index}."),
             }

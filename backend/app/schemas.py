@@ -104,6 +104,20 @@ class GenerationResponse(BaseModel):
             raise ValueError("Tweets must be unique.")
         if sorted(tweet.id for tweet in value) != list(range(1, 11)):
             raise ValueError("Tweet IDs must contain exactly 1 through 10.")
+        counts = {category: sum(tweet.category == category for tweet in value) for category in CATEGORIES}
+        required_categories = {
+            "Conversational", "Promotional", "Witty / Meme-style", "Informative",
+        }
+        missing = [category for category in required_categories if counts[category] < 2]
+        if missing:
+            raise ValueError(
+                "Tweet set needs at least two tweets in each core category: "
+                + ", ".join(sorted(missing))
+            )
+        if counts["Engagement"] + counts["Community-focused"] < 2:
+            raise ValueError(
+                "Tweet set needs at least two Engagement or Community-focused tweets."
+            )
         return value
 
 
@@ -114,6 +128,13 @@ class RegenerateRequest(BaseModel):
     additional_instructions: Annotated[str, Field(default="", max_length=1000)]
     category: str = "Conversational"
     tweet_id: int = Field(ge=1)
+
+    @field_validator("category")
+    @classmethod
+    def valid_regeneration_category(cls, value: str) -> str:
+        if value not in CATEGORIES:
+            raise ValueError("Invalid tweet category.")
+        return value
 
 
 class RegenerateResponse(BaseModel):

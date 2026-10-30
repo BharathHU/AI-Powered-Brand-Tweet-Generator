@@ -46,7 +46,7 @@ def tweet_generation_prompt(profile, request):
     return f"""
 You are an expert social media content writer.
 
-Generate exactly 10 unique tweets for this brand.
+Generate exactly 10 unique tweets for this brand with a balanced content mix.
 
 BRAND PROFILE:
 {profile.model_dump_json()}
@@ -94,8 +94,10 @@ STRICT RULES:
 4. Each tweet must be no longer than 280 characters.
 5. character_count must equal the exact length of text.
 6. Use only the allowed categories.
-7. Maintain the brand voice.
-8. Avoid unsupported claims.
-9. Return valid JSON only.
-10. Do not include Markdown or explanations.
+7. Use exactly 2 Conversational tweets, 2 Promotional tweets, 2 Witty / Meme-style tweets, and 2 Informative tweets.
+8. Use the remaining 2 tweets for Engagement and/or Community-focused content, choosing the categories that best fit the campaign objective.
+9. Maintain the brand voice and vary hooks, ideas, and sentence structure.
+10. Avoid unsupported claims.
+11. Return valid JSON only.
+12. Do not include Markdown or explanations.
 """
